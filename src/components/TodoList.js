@@ -2,12 +2,21 @@ import React, { Component } from 'react';
 import TodoItem from './TodoItem';
 import { connect } from 'react-redux';
 import { getTasks } from '../redux/actions';
-
+import Search from './Search';
+import { Route } from 'react-router-dom';
 
 
 class TodoList extends React.Component {
-    async componentDidMount() {
-        await this.props.getTasks();
+    
+    componentDidMount() {
+        this.props.getTasks();
+    }
+
+    componentDidUpdate() {       
+        if (this.props.history.location.search && this.props.history.location.search !== this.search) {
+            this.props.getTasks(this.props.history.location.search);
+            this.search = this.props.history.location.search;
+        }
     }
     render() {
         let todos = this.props.tasks.map((item, index) => {
@@ -16,15 +25,18 @@ class TodoList extends React.Component {
             )
         })
 
-        if (this.props.tasks.length === 0) {
-            return <p>Loading...</p>
-        }
-        return (
 
-            <div className='collection'>
-                <ul>
-                    {todos}
-                </ul>
+        return (
+            <div className="container">
+                <Route component={Search} />
+                {this.props.tasks.length !== 0 ?
+
+                    <div className='collection'>
+                        <ul>
+                            {todos}
+                        </ul>
+                    </div>
+                    : <div>Nothing found</div>}
             </div>
         )
     }
@@ -39,7 +51,7 @@ export default connect(
     },
     function (dispatch) {
         return {
-            getTasks: () => dispatch(getTasks())
+            getTasks: (search) => dispatch(getTasks(search))
         }
     }
 )(TodoList);
