@@ -4,6 +4,7 @@ import TodoForm from './components/TodoForm';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import TodoPage from './components/TodoPage';
 
 
 class App extends Component {
@@ -14,7 +15,8 @@ class App extends Component {
 
           <Provider store={store}>
             <Route path="/" exact component={TodoList} />
-            <Route path="/add" exact component={TodoForm} />
+            <Route path="/todo/add" exact component={TodoForm} />
+            <Route path="/todo/:id" exact component={TodoPage} />
           </Provider>
 
         </Switch>
